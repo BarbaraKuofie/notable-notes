@@ -10,14 +10,22 @@ class API::V1::NotesController < ApplicationController
         render json: note 
     end 
 
+    def edit
+ 
+    end
+
     def update
+        note = Note.find(params[:id])
         note.update(note_params)
-        if note.save 
+        if note.valid?
+            note.save 
             render json: note, status: :accepted
          else
              render json: { errors: note.errors.full_messages }, status: :unprocessible_entity
          end
-     end  
+    end  
+
+
 
     def create 
         note = Note.create(note_params)
@@ -30,6 +38,7 @@ class API::V1::NotesController < ApplicationController
     end 
 
     def destroy
+        note = Note.find(params[:id])
         note.destroy
 
         render json: note 
@@ -41,7 +50,7 @@ class API::V1::NotesController < ApplicationController
     end
 
     def note_params
-        params.require(:note).permit(:title, :content, :owner, :icon, :helpful, :unhelpful, :user_id)
+        params.require(:note).permit(:title, :content, :owner, :icon, :helpful, :unhelpful, :user_id, :id)
     end 
 
 end
